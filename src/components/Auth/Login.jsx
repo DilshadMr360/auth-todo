@@ -37,14 +37,14 @@ const Login = () => {
 
                   setTimeout(() => {
                     navigate("/todos"); // Navigate only on success
-                  }, 1500); 
+                  }, 1500);
                 } else {
                   toast.error("Invalid email or password"); // Show error toast
                 }
               } catch (error) {
                 toast.error("Something went wrong. Please try again.");
               } finally {
-                setSubmitting(false); 
+                setSubmitting(false);
               }
             }}
           >

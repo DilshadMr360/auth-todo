@@ -45,7 +45,11 @@ const Register = () => {
             onSubmit={async (values, { setSubmitting }) => {
               console.log("Registering User:", values);
 
-              const result = register(values.name, values.email, values.password);
+              const result = register(
+                values.name,
+                values.email,
+                values.password
+              );
 
               if (!result.success) {
                 toast.error(result.message);

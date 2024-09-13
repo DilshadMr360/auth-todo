@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, createContext } from "react";
-import { AuthContext } from "./AuthContext"; // Correct import
+import { AuthContext } from "./AuthContext";
 
 export const TodoContext = createContext();
 
@@ -11,7 +11,8 @@ export const TodoProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      const storedTodos = JSON.parse(localStorage.getItem(`todos_${user.id}`)) || [];
+      const storedTodos =
+        JSON.parse(localStorage.getItem(`todos_${user.id}`)) || [];
       setTodos(storedTodos);
     } else {
       setTodos([]);
