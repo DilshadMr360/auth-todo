@@ -7,17 +7,23 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Load user data from localStorage on component mount
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser = JSON.parse(localStorage.getItem('currentUser'));
     if (storedUser) {
       setUser(storedUser);
     }
   }, []);
 
   const login = (email, password) => {
-    const storedUser = JSON.parse(localStorage.getItem('user')); // Get user from localStorage
-  
-    if (storedUser && storedUser.email === email && storedUser.password === password) {
+    // Find user by email
+    const users = Object.keys(localStorage)
+      .filter(key => key.startsWith('user_'))
+      .map(key => JSON.parse(localStorage.getItem(key)));
+    
+    const storedUser = users.find(user => user.email === email && user.password === password);
+    
+    if (storedUser) {
       setUser(storedUser);
+      localStorage.setItem('currentUser', JSON.stringify(storedUser)); // Set current user
       return true; // Successful login
     } else {
       return false; // Invalid login
@@ -27,11 +33,14 @@ export const AuthProvider = ({ children }) => {
   const register = (name, email, password) => {
     const userId = Date.now(); // Generate a unique ID for the user
     const userData = { id: userId, name, email, password };
-    localStorage.setItem('user', JSON.stringify(userData)); // Save user to localStorage
+    localStorage.setItem(`user_${userId}`, JSON.stringify(userData)); // Save user with unique key
+    localStorage.setItem('currentUser', JSON.stringify(userData)); // Set current user
     setUser(userData); // Update state with the new user
   };
 
   const logout = () => {
+    localStorage.removeItem('currentUser'); // Remove current user from localStorage
+    setUser(null); // Clear user state
   };
   
   return (
