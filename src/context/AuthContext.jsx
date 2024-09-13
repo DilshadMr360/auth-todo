@@ -6,7 +6,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Load user data from localStorage on component mount
     const storedUser = JSON.parse(localStorage.getItem('currentUser'));
     if (storedUser) {
       setUser(storedUser);
@@ -14,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (email, password) => {
-    // Find user by email
     const users = Object.keys(localStorage)
       .filter(key => key.startsWith('user_'))
       .map(key => JSON.parse(localStorage.getItem(key)));
@@ -23,26 +21,38 @@ export const AuthProvider = ({ children }) => {
     
     if (storedUser) {
       setUser(storedUser);
-      localStorage.setItem('currentUser', JSON.stringify(storedUser)); // Set current user
-      return true; // Successful login
+      localStorage.setItem('currentUser', JSON.stringify(storedUser));
+      return { success: true };
     } else {
-      return false; // Invalid login
+      return { success: false, message: 'Invalid credentials' };
     }
   };
 
   const register = (name, email, password) => {
-    const userId = Date.now(); // Generate a unique ID for the user
-    const userData = { id: userId, name, email, password };
-    localStorage.setItem(`user_${userId}`, JSON.stringify(userData)); // Save user with unique key
-    localStorage.setItem('currentUser', JSON.stringify(userData)); // Set current user
-    setUser(userData); // Update state with the new user
+    const users = Object.keys(localStorage)
+      .filter(key => key.startsWith('user_'))
+      .map(key => JSON.parse(localStorage.getItem(key)));
+  
+    const existingUser = users.find(user => user.email === email);
+  
+    if (existingUser) {
+      return { success: false, message: 'User already exists' };
+    } else {
+      const userId = Date.now();
+      const userData = { id: userId, name, email, password };
+      localStorage.setItem(`user_${userId}`, JSON.stringify(userData));
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      setUser(userData);
+      localStorage.setItem(`todos_${userId}`, JSON.stringify([]));
+      return { success: true };
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('currentUser'); // Remove current user from localStorage
-    setUser(null); // Clear user state
+    localStorage.removeItem('currentUser');
+    setUser(null);
   };
-  
+
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
