@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/register"); // Redirect to login page after logout
+    navigate("/"); // Redirect to login page after logout
   };
 
   return (
