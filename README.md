@@ -22,3 +22,25 @@ How to Run the Project Locally
 
 
 ** Thank You ** 
+
+
+
+* CSS Library 
+
+  - Tailwind CSS is used for streamlined and responsive styling.
+  
+* Icons Package
+ 
+  - React Icons is integrated to provide a variety of icons for the interface.
+
+* Notifications
+
+  - Toastify Used for pop-up messages, providing feedback on actions like login success, registration, or errors.
+  
+* Confirmation Alerts
+
+  - React SweetAlert displays confirmation pop-ups, for example, asking users to confirm actions such as logging out.
+  
+* Font Family
+ 
+  - The Outfit is used throughout the application  for clean and modern look
