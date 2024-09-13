@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, createContext } from "react";
+import { AuthContext } from "./AuthContext";
 
 export const TodoContext = createContext();
 
@@ -6,24 +7,27 @@ export const TodoProvider = ({ children }) => {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingTodo, setEditingTodo] = useState(null);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    console.log("Loaded todos from local storage:", storedTodos);
-    setTodos(storedTodos);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      console.log("Saving todos to local storage:", todos);
-      localStorage.setItem("todos", JSON.stringify(todos));
+    if (user) {
+      const storedTodos =
+        JSON.parse(localStorage.getItem(`todos_${user.id}`)) || [];
+      setTodos(storedTodos);
+    } else {
+      setTodos([]);
     }
-  }, [todos, loading]);
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    if (!loading && user) {
+      localStorage.setItem(`todos_${user.id}`, JSON.stringify(todos));
+    }
+  }, [todos, loading, user]);
 
   const addTodo = (todo) => {
     const newTodos = [...todos, { ...todo, id: Date.now(), completed: false }];
-    console.log("Adding todo:", newTodos);
     setTodos(newTodos);
   };
 

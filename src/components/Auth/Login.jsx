@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import TodoHeader from "../Header/TodoHeader";
 
 const validationSchema = Yup.object({
@@ -22,26 +22,30 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen bg-green-500 ">
-      <TodoHeader text="Welcome to Todo,  Let's Sign In" />
-      <div className="flex items-center justify-center flex-1 md:-mt-20 ">
+    <div className="flex flex-col w-full h-screen bg-green-500">
+      <TodoHeader text="Welcome to Todo, Let's Sign In" />
+      <div className="flex items-center justify-center flex-1 md:-mt-20">
         <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              console.log("Login Attempt:", values);
-              const success = login(values.email, values.password);
-              if (success) {
-                toast.success("Login successful!");
-                navigate("/todos");
-              } else {
-                toast.error("Invalid email or password");
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                const success = await login(values.email, values.password);
+                if (success) {
+                  toast.success("Login successful!");
+
+                  setTimeout(() => {
+                    navigate("/todos"); // Navigate only on success
+                  }, 1500);
+                } else {
+                  toast.error("Invalid email or password"); // Show error toast
+                }
+              } catch (error) {
+                toast.error("Something went wrong. Please try again.");
+              } finally {
+                setSubmitting(false);
               }
-              console.log(
-                "User stored in localStorage:",
-                localStorage.getItem("user")
-              );
             }}
           >
             {({ isSubmitting }) => (
@@ -94,6 +98,7 @@ const Login = () => {
           </Formik>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

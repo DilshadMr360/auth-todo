@@ -1,14 +1,12 @@
-// Register.js
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
-import TodoHeader from "../Header/TodoHeader"; 
+import "react-toastify/dist/ReactToastify.css";
+import TodoHeader from "../Header/TodoHeader";
 
-// the validation schema using Yup
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   email: Yup.string()
@@ -26,13 +24,14 @@ const Register = () => {
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSignInRedirect = () => {
-    navigate("/");
+  const checkIfEmailExists = (email) => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    return storedUser && storedUser.email === email;
   };
 
   return (
     <div className="flex flex-col w-full h-screen bg-green-500">
-      <TodoHeader text="Welcome to Todo,  Let's Sign Up" />
+      <TodoHeader text="Welcome to Todo, Let's Sign Up" />
       <div className="flex items-center justify-center flex-1">
         <div className="w-full max-w-md p-8 bg-white rounded shadow-lg">
           <Formik
@@ -43,25 +42,30 @@ const Register = () => {
               confirmPassword: "",
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               console.log("Registering User:", values);
-              register(values.name, values.email, values.password);
-              console.log(
-                "User stored in localStorage:",
-                localStorage.getItem("user")
+
+              const result = register(
+                values.name,
+                values.email,
+                values.password
               );
 
-              toast.success("Registration successful");
+              if (!result.success) {
+                toast.error(result.message);
+              } else {
+                toast.success("Registration successful");
+                setTimeout(() => {
+                  navigate("/");
+                }, 2000);
+              }
 
-              setTimeout(() => {
-                navigate("/");
-              }, 2000); 
-
-              setSubmitting(false); 
+              setSubmitting(false);
             }}
           >
             {({ isSubmitting }) => (
               <Form>
+                {/* Form Fields */}
                 <div className="mb-4">
                   <Field
                     type="text"
@@ -126,7 +130,7 @@ const Register = () => {
                     Already have an account?{" "}
                     <button
                       type="button"
-                      onClick={handleSignInRedirect}
+                      onClick={() => navigate("/")}
                       className="text-green-500 hover:underline"
                     >
                       Sign In

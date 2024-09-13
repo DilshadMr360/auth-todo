@@ -1,8 +1,24 @@
-# React + Vite
+# React + Vite + Tailwind 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# How to start the project 
 
-Currently, two official plugins are available:
+How to Run the Project Locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone the Repository:
+   - Go to: https://github.com/DilshadMr360/auth-todo
+   - Click "Code" and select "Open with GitHub Desktop"
+   - Clone to your local path
+
+2. Open the project in Visual Studio Code.
+
+3. In the terminal, navigate to the `auth-todo` folder:
+   cd auth-todo
+
+4. Install dependencies:
+   npm install
+
+5. Start the development server (runs on port 5173):
+   npm run dev
+
+
+** Thank You ** 

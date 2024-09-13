@@ -48,7 +48,7 @@ const TodoItem = ({ todo }) => {
   return (
     <div
       className={`p-4 bg-white rounded shadow-md mx-2 my-2 ${
-        todo.completed ? "bg-green-100" : "bg-white"
+        todo.completed ? "bg-green-200" : "bg-white"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -123,7 +123,11 @@ const TodoItem = ({ todo }) => {
             <>
               <button
                 onClick={handleComplete}
-                className="px-2 py-1 text-sm text-white bg-green-500 rounded hover:bg-green-700"
+                className={`px-2 py-1 text-sm text-white rounded ${
+                  todo.completed
+                    ? "bg-gray-500 hover:bg-gray-700"
+                    : "bg-green-500 hover:bg-green-700"
+                }`}
               >
                 {todo.completed ? "Undo" : "Completed"}
               </button>
