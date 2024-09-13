@@ -1,4 +1,3 @@
-// TodoHeader.js
 import React from "react";
 
 const TodoHeader = ({ text }) => {
