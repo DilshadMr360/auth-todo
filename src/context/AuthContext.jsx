@@ -1,40 +1,44 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(); 
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('currentUser'));
     if (storedUser) {
       setUser(storedUser);
     }
+    setLoading(false);
   }, []);
 
   const login = (email, password) => {
     const users = Object.keys(localStorage)
       .filter(key => key.startsWith('user_'))
       .map(key => JSON.parse(localStorage.getItem(key)));
-    
+  
+    // Find the user with matching email and password
     const storedUser = users.find(user => user.email === email && user.password === password);
-    
+  
     if (storedUser) {
-      setUser(storedUser);
       localStorage.setItem('currentUser', JSON.stringify(storedUser));
-      return { success: true };
+      setUser(storedUser);
+      return true; // Login successful
     } else {
-      return { success: false, message: 'Invalid credentials' };
+      return false; // Invalid credentials
     }
   };
+  
 
   const register = (name, email, password) => {
     const users = Object.keys(localStorage)
       .filter(key => key.startsWith('user_'))
       .map(key => JSON.parse(localStorage.getItem(key)));
-  
+
     const existingUser = users.find(user => user.email === email);
-  
+
     if (existingUser) {
       return { success: false, message: 'User already exists' };
     } else {
@@ -54,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

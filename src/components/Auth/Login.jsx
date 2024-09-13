@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import TodoHeader from "../Header/TodoHeader";
 
-// Validation schema for the form fields
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
@@ -36,12 +35,11 @@ const Login = () => {
                 if (success) {
                   toast.success("Login successful!");
 
-                  // Wait for a small delay to allow the toast to show
                   setTimeout(() => {
-                    navigate("/todos"); // Only navigate after toast is shown
-                  }, 1500); // 1.5 seconds delay
+                    navigate("/todos"); // Navigate only on success
+                  }, 1500); 
                 } else {
-                  toast.error("Invalid email or password");
+                  toast.error("Invalid email or password"); // Show error toast
                 }
               } catch (error) {
                 toast.error("Something went wrong. Please try again.");
@@ -104,6 +102,5 @@ const Login = () => {
     </div>
   );
 };
-
 
 export default Login;
